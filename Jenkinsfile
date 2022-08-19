@@ -1,8 +1,9 @@
 pipeline {
     agent any
     environment {
-        registry = "prabowoekky/k8scicd"
+        registry = "multiclusterbtpn/k8scicd"
         GOCACHE = "/tmp"
+        registryUrl = 'multiclusterbtpn.azurecr.io'
     }
     stages {
         stage('Build') {
@@ -46,7 +47,7 @@ pipeline {
             steps{
                 script {
                     def appimage = docker.build registry + ":$BUILD_NUMBER"
-                    docker.withRegistry( '', registryCredential ) {
+                    docker.withRegistry( "http://${registryUrl}", registryCredential ) {
                         appimage.push()
                         appimage.push('latest')
                     }
